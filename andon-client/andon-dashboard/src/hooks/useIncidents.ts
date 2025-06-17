@@ -2,12 +2,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
-export const useIncidents = (status:string='open') =>
+export const useIncidents = (status: string = 'open', station?: string) =>
   useQuery({
-    queryKey: ['incidents', status],
+    queryKey: ['incidents', status, station],
     queryFn: async () => {
       const { data } = await axios.get(`/incidents?status=${status}`);
-      return data;
+      return station ? data.filter((i: any) => String(i.station_id) === station) : data;
     }
   });
 
@@ -15,6 +15,6 @@ export const useCloseIncident = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id:number) => axios.patch(`/incidents/${id}/close`),
-    onSuccess: () => qc.invalidateQueries({ queryKey:['incidents','open'] })
+    onSuccess: () => qc.invalidateQueries({ queryKey:['incidents'] })
   });
 };

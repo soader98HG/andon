@@ -14,6 +14,8 @@ export const useMqtt = (
         cb({ topic: tp, payload: JSON.parse(buf.toString()) });
       } catch { /* ignore */ }
     });
-    return () => client.end();
+    return () => {
+      client.end();
+    };
   }, [topic, cb]);
 };

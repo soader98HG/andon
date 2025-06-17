@@ -2,9 +2,11 @@
 // grafica simple de incidencias por estacion usando Recharts
 import { useIncidents } from '../hooks/useIncidents';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { useStation } from '../contexts/StationContext';
 
 export default function ChartsPage() {
-  const { data, isLoading } = useIncidents('all');
+  const { station } = useStation();
+  const { data, isLoading } = useIncidents('all', station);
 
   if (isLoading) return <p>Cargando...</p>;
   if (!data?.length) return <p>No hay datos.</p>;

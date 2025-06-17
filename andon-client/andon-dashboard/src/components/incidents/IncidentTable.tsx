@@ -1,7 +1,9 @@
 import { useIncidents, useCloseIncident } from '../../hooks/useIncidents';
+import { useStation } from '../../contexts/StationContext';
 
 export default function IncidentTable({ status }: { status: string }) {
-  const { data } = useIncidents(status);
+  const { station } = useStation();
+  const { data } = useIncidents(status, station);
   const close   = useCloseIncident();
 
   if (!data) return <p>Cargando...</p>;
