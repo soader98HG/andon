@@ -2,10 +2,12 @@ import IncidentForm from '../components/incidents/IncidentForm';
 import IncidentTable from '../components/incidents/IncidentTable';
 import { useState } from 'react';
 import { useStation } from '../contexts/StationContext';
+import { useIncidentSync } from '../hooks/useIncidentSync';
 
 export default function IncidentsPage() {
   const [tab, setTab] = useState<'open' | 'closed'>('open');
   const { station } = useStation();
+  useIncidentSync();
 
   return (
     <div className="p-4">
