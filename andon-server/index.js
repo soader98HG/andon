@@ -79,10 +79,19 @@ app.post('/incidents', async (req, res) => {
 
 /* ---------- WebSocket bridge ---------- */
 const wss = new WebSocketServer({ port: 8080 })
-wss.on('connection', ws => {
-  mqttClient.on('message', (_topic, msg) => ws.send(msg.toString()))
+
+// forward MQTT messages to all connected websocket clients
+mqttClient.on('message', (_topic, msg) => {
+  const data = msg.toString()
+  wss.clients.forEach(client => {
+    if (client.readyState === client.OPEN) client.send(data)
+  })
 })
 mqttClient.subscribe('andon/#')
+
+wss.on('connection', () => {
+  // no per-connection listener needed; handled above
+})
 
 /* ---------- arranque ---------- */
 app.listen(process.env.PORT, () =>
