@@ -80,11 +80,12 @@ app.post('/incidents', async (req, res) => {
 /* ---------- WebSocket bridge ---------- */
 const wss = new WebSocketServer({ port: 8080 })
 mqttClient.on('message', (_topic, msg) => {
-  for(const client of wss.clients){
-    if(client.readyState === WebSocket.OPEN){
-      client.send(msg.toString())
+  const text = msg.toString()
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(text)
     }
-  }
+  })
 })
 mqttClient.subscribe('andon/#')
 
