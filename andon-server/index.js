@@ -7,7 +7,7 @@ const express = require('express')
 const cors    = require('cors')
 const { Pool } = require('pg')
 const mqtt   = require('mqtt')
-const { WebSocketServer } = require('ws')
+const { WebSocketServer, WebSocket } = require('ws')
 
 const app  = express()
 app.use(cors())          // cors despues de crear app
@@ -79,8 +79,13 @@ app.post('/incidents', async (req, res) => {
 
 /* ---------- WebSocket bridge ---------- */
 const wss = new WebSocketServer({ port: 8080 })
-wss.on('connection', ws => {
-  mqttClient.on('message', (_topic, msg) => ws.send(msg.toString()))
+wss.on('connection', _ws => {})
+mqttClient.on('message', (_topic, msg) => {
+  for(const client of wss.clients){
+    if(client.readyState === WebSocket.OPEN){
+      client.send(msg.toString())
+    }
+  }
 })
 mqttClient.subscribe('andon/#')
 
