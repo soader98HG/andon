@@ -22,7 +22,7 @@ export default function IncidentsPage() {
           onClick={() => setTab('closed')}
           className={`px-4 py-1 ${tab === 'closed' ? 'bg-gray-300' : ''}`}
         >
-          Historial
+          Histórico
         </button>
       </div>
 

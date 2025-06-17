@@ -1,5 +1,5 @@
 /* main backend file
-   comments without accents or letter enie */
+   comments without accents or the letter ñ */
 
 require('dotenv').config()
 
@@ -79,17 +79,34 @@ app.post('/incidents', async (req, res) => {
 
 /* ---------- WebSocket bridge ---------- */
 const wss = new WebSocketServer({ port: 8080 })
+/<<<<<<< 7q5c56-codex/modify-websocket-setup-and-mqtt-handling
 mqttClient.on('message', (_topic, msg) => {
   const text = msg.toString()
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(text)
     }
+=======
+
+// forward MQTT messages to all connected websocket clients
+mqttClient.on('message', (_topic, msg) => {
+  const data = msg.toString()
+  wss.clients.forEach(client => {
+    if (client.readyState === client.OPEN) client.send(data)
+/>>>>>>> main
   })
 })
 mqttClient.subscribe('andon/#')
 
+wss.on('connection', () => {
+  // no per-connection listener needed; handled above
+})
+
 /* ---------- arranque ---------- */
-app.listen(process.env.PORT, () =>
-  console.log(`API listening on ${process.env.PORT}`)
-)
+if (require.main === module) {
+  app.listen(process.env.PORT, () =>
+    console.log(`API listening on ${process.env.PORT}`)
+  )
+}
+
+module.exports = app
