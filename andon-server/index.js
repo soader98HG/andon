@@ -94,6 +94,10 @@ wss.on('connection', () => {
 })
 
 /* ---------- arranque ---------- */
-app.listen(process.env.PORT, () =>
-  console.log(`API listening on ${process.env.PORT}`)
-)
+if (require.main === module) {
+  app.listen(process.env.PORT, () =>
+    console.log(`API listening on ${process.env.PORT}`)
+  )
+}
+
+module.exports = app
