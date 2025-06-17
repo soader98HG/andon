@@ -1,21 +1,33 @@
 // useMqtt.ts
 import { useEffect } from 'react';
-import mqtt from 'mqtt';
+
+const matches = (filter: string, topic: string) => {
+  const fs = filter.split('/');
+  const ts = topic.split('/');
+  for (let i = 0; i < fs.length; i++) {
+    const f = fs[i];
+    const t = ts[i];
+    if (f === '#') return true;
+    if (f === '+') continue;
+    if (f !== t) return false;
+  }
+  return fs.length === ts.length;
+};
 
 export const useMqtt = (
   topic: string,
   cb: (msg: { topic: string; payload: any }) => void
 ) => {
   useEffect(() => {
-    const client = mqtt.connect('ws://' + location.hostname + ':9001');
-    client.on('connect', () => client.subscribe(topic));
-    client.on('message', (tp, buf) => {
+    const ws = new WebSocket('ws://' + location.hostname + ':8080');
+    ws.onmessage = ev => {
       try {
-        cb({ topic: tp, payload: JSON.parse(buf.toString()) });
+        const msg = JSON.parse(ev.data);
+        if (matches(topic, msg.topic)) cb(msg);
       } catch { /* ignore */ }
-    });
+    };
     return () => {
-      client.end();
+      ws.close();
     };
   }, [topic, cb]);
 };
