@@ -1,0 +1,15 @@
+# node / Vite
+node_modules/
+dist/
+.cache/
+# env
+*.env
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/logs
+# mac / linux misc
+.DS_Store
+.idea/
+.vscode/
