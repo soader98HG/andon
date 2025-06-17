@@ -1,13 +1,18 @@
 import IncidentForm from '../components/incidents/IncidentForm';
 import IncidentTable from '../components/incidents/IncidentTable';
 import { useState } from 'react';
+import { useStation } from '../contexts/StationContext';
 
 export default function IncidentsPage() {
   const [tab, setTab] = useState<'open' | 'closed'>('open');
+  const { station } = useStation();
 
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-2">Incidencias</h1>
+      {station === '' && (
+        <p className="text-red-600">Selecciona una estaci\u00f3n para operar.</p>
+      )}
 
       <IncidentForm />
 
