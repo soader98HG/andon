@@ -1,5 +1,5 @@
 /* main backend file
-   comments without accents or letter enie */
+   comments without accents or the letter ñ */
 
 require('dotenv').config()
 
