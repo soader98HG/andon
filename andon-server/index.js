@@ -81,11 +81,14 @@ app.post('/incidents', async (req, res) => {
 const wss = new WebSocketServer({ port: 8080 })
 
 // forward MQTT messages to all connected websocket clients
-mqttClient.on('message', (_topic, msg) => {
+mqttClient.on('message', (topic, msg) => {
   const text = msg.toString()
+  let payload
+  try { payload = JSON.parse(text) } catch { payload = text }
+  const packet = JSON.stringify({ topic, payload })
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(text)
+      client.send(packet)
     }
   })
 })
