@@ -79,7 +79,6 @@ app.post('/incidents', async (req, res) => {
 
 /* ---------- WebSocket bridge ---------- */
 const wss = new WebSocketServer({ port: 8080 })
-wss.on('connection', _ws => {})
 mqttClient.on('message', (_topic, msg) => {
   for(const client of wss.clients){
     if(client.readyState === WebSocket.OPEN){
