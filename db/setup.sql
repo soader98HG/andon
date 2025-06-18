@@ -23,6 +23,10 @@ CREATE TABLE IF NOT EXISTS incident (
   closed_at   TIMESTAMP
 );
 
+-- Ensure newer columns exist when re-running the script
+ALTER TABLE incident
+  ADD COLUMN IF NOT EXISTS problem TEXT;
+
 -- Sample stations
 INSERT INTO station (name) VALUES ('ESTACION 1'), ('ESTACION 2')
   ON CONFLICT DO NOTHING;
