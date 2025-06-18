@@ -103,12 +103,21 @@ app.get('/defects', async (_req, res) => {
 
 app.post('/incidents', async (req, res) => {
   const { station_id, defect_code, vehicle_id, problem } = req.body
+
+  const check = await pool.query(
+    'SELECT 1 FROM defect_code WHERE code = $1',
+    [defect_code]
+  )
+  if (check.rowCount === 0)
+    return res.status(400).json({ error: 'invalid defect code' })
+
   const { rows } = await pool.query(
     `INSERT INTO incident (
        station_id, defect_code, vehicle_id, problem, received_at
      ) VALUES ($1,$2,$3,$4,NOW()) RETURNING *`,
     [station_id, defect_code, vehicle_id, problem]
   )
+
   const inc = rows[0]
   mqttClient.publish('andon/incidents/new', JSON.stringify(inc))
   mqttClient.publish(
