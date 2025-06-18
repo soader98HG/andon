@@ -27,6 +27,7 @@ describe('/incidents endpoints', () => {
       station_id: 1,
       defect_code: 'A',
       vehicle_id: 'V2',
+      problem: 'falla motor',
       status: 'open',
       received_at: 'now'
     };
@@ -34,7 +35,8 @@ describe('/incidents endpoints', () => {
     const res = await request(app).post('/incidents').send({
       station_id: 1,
       defect_code: 'A',
-      vehicle_id: 'V2'
+      vehicle_id: 'V2',
+      problem: 'falla motor'
     });
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual(newInc);

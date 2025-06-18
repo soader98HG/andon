@@ -102,12 +102,12 @@ app.get('/defects', async (_req, res) => {
 })
 
 app.post('/incidents', async (req, res) => {
-  const { station_id, defect_code, vehicle_id } = req.body
+  const { station_id, defect_code, vehicle_id, problem } = req.body
   const { rows } = await pool.query(
     `INSERT INTO incident (
-       station_id, defect_code, vehicle_id, received_at
-     ) VALUES ($1,$2,$3,NOW()) RETURNING *`,
-    [station_id, defect_code, vehicle_id]
+       station_id, defect_code, vehicle_id, problem, received_at
+     ) VALUES ($1,$2,$3,$4,NOW()) RETURNING *`,
+    [station_id, defect_code, vehicle_id, problem]
   )
   const inc = rows[0]
   mqttClient.publish('andon/incidents/new', JSON.stringify(inc))

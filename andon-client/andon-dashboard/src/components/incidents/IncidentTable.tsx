@@ -13,7 +13,8 @@ export default function IncidentTable({ status }: { status: string }) {
       <thead>
         <tr>
           <th>ID</th><th>ESTACION</th><th>Defecto</th>
-          <th>Vehiculo</th><th>Abierto</th><th>Accion</th>
+          <th>Vehiculo</th><th>Problema</th>
+          <th>Reporte</th><th>Reproceso</th><th>Finalizado</th><th>Accion</th>
         </tr>
       </thead>
       <tbody>
@@ -23,7 +24,10 @@ export default function IncidentTable({ status }: { status: string }) {
             <td>{i.station_id}</td>
             <td>{i.defect_code}</td>
             <td>{i.vehicle_id}</td>
-            <td>{new Date(i.opened_at).toLocaleTimeString()}</td>
+            <td>{i.problem}</td>
+            <td>{i.opened_at && new Date(i.opened_at).toLocaleString()}</td>
+            <td>{i.reprocess_at && new Date(i.reprocess_at).toLocaleString()}</td>
+            <td>{i.closed_at && new Date(i.closed_at).toLocaleString()}</td>
             <td>
               {i.status === 'open' && (
                 <select

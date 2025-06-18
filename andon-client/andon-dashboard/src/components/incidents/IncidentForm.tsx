@@ -18,7 +18,8 @@ export default function IncidentForm() {
   const [form, setForm] = useState({
     station_id: '',
     defect_code: '',
-    vehicle_id: ''
+    vehicle_id: '',
+    problem: ''
   });
 
   const handle = (e: any) =>
@@ -27,7 +28,7 @@ export default function IncidentForm() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     await axios.post('/incidents', form);
-    setForm({ station_id: '', defect_code: '', vehicle_id: '' });
+    setForm({ station_id: '', defect_code: '', vehicle_id: '', problem: '' });
   };
 
   return (
@@ -88,6 +89,14 @@ export default function IncidentForm() {
         name="vehicle_id"
         placeholder="Vehiculo ID"
         value={form.vehicle_id}
+        onChange={handle}
+        className="border p-1 w-full"
+      />
+
+      <textarea
+        name="problem"
+        placeholder="Detalle del problema"
+        value={form.problem}
         onChange={handle}
         className="border p-1 w-full"
       />
