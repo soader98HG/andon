@@ -31,8 +31,9 @@ ALTER TABLE incident
 INSERT INTO station (name) VALUES ('ESTACION 1'), ('ESTACION 2')
   ON CONFLICT DO NOTHING;
 
--- Sample defect codes per station
+-- Sample defect codes per station (with conflict handling)
 INSERT INTO defect_code (code, station_id, description) VALUES
   ('A1', 1, 'Defecto est1 A1'),
   ('B1', 1, 'Defecto est1 B1'),
-  ('A2', 2, 'Defecto est2 A2');
+  ('A2', 2, 'Defecto est2 A2')
+  ON CONFLICT (code) DO NOTHING;
