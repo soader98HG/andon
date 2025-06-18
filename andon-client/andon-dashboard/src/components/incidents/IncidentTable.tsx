@@ -1,10 +1,10 @@
-import { useIncidents, useCloseIncident } from '../../hooks/useIncidents';
+import { useIncidents, useIncidentAction } from '../../hooks/useIncidents';
 import { useStation } from '../../contexts/StationContext';
 
 export default function IncidentTable({ status }: { status: string }) {
   const { station } = useStation();
   const { data } = useIncidents(status, station);
-  const close   = useCloseIncident();
+  const action  = useIncidentAction();
 
   if (!data) return <p>Cargando...</p>;
 
@@ -26,12 +26,19 @@ export default function IncidentTable({ status }: { status: string }) {
             <td>{new Date(i.opened_at).toLocaleTimeString()}</td>
             <td>
               {i.status === 'open' && (
-                <button
-                  onClick={() => close.mutate(i.id)}
-                  className="bg-green-600 text-white px-2"
+                <select
+                  defaultValue=""
+                  onChange={e => {
+                    const val = e.target.value;
+                    if(val) action.mutate({ id: i.id, action: val });
+                  }}
+                  className="border p-1"
                 >
-                  Cerrar
-                </button>
+                  <option value="">Accion</option>
+                  <option value="finalizado">finalizado</option>
+                  <option value="reproceso">reproceso</option>
+                  <option value="recibido">recibido</option>
+                </select>
               )}
             </td>
           </tr>

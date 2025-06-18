@@ -40,4 +40,26 @@ describe('/incidents endpoints', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(closed);
   });
+
+  test('PATCH /incidents/:id/action finalizado closes incident', async () => {
+    const before = { id: 1, station_id: 1 };
+    const after  = { id: 1, station_id: 1, status: 'closed' };
+    mPool.query
+      .mockResolvedValueOnce({ rows: [before] })
+      .mockResolvedValueOnce({ rows: [after] });
+    const res = await request(app)
+      .patch('/incidents/1/action')
+      .send({ action: 'finalizado' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(after);
+  });
+
+  test('PATCH /incidents/:id/action invalid action returns 400', async () => {
+    const inc = { id: 1, station_id: 1 };
+    mPool.query.mockResolvedValueOnce({ rows: [inc] });
+    const res = await request(app)
+      .patch('/incidents/1/action')
+      .send({ action: 'foo' });
+    expect(res.statusCode).toBe(400);
+  });
 });

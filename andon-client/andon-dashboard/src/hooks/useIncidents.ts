@@ -18,3 +18,12 @@ export const useCloseIncident = () => {
     onSuccess: () => qc.invalidateQueries({ queryKey:['incidents'] })
   });
 };
+
+export const useIncidentAction = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, action }: { id:number; action:string }) =>
+      axios.patch(`/incidents/${id}/action`, { action }),
+    onSuccess: () => qc.invalidateQueries({ queryKey:['incidents'] })
+  });
+};

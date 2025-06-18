@@ -50,6 +50,39 @@ app.patch('/incidents/:id/close', async (req,res)=>{
   res.json(inc)
 })
 
+// actualizar estado de incidente y baliza
+app.patch('/incidents/:id/action', async (req, res) => {
+  const id = req.params.id
+  const action = req.body.action
+  const { rows } = await pool.query('SELECT * FROM incident WHERE id=$1', [id])
+  if(!rows.length) return res.status(404).json({ error: 'not found' })
+  const inc = rows[0]
+
+  if(action === 'finalizado') {
+    const { rows: up } = await pool.query(
+      `UPDATE incident
+         SET status='closed', closed_at=NOW()
+         WHERE id=$1 RETURNING *`, [id])
+    const upd = up[0]
+    mqttClient.publish('andon/incidents/update', JSON.stringify(upd))
+    mqttClient.publish(`andon/station/${upd.station_id}/state`,
+      JSON.stringify({ color: 'verde' }))
+    return res.json(upd)
+  }
+
+  const color = action === 'reproceso'
+    ? 'amarillo'
+    : action === 'recibido'
+      ? 'rojo'
+      : null
+
+  if(!color) return res.status(400).json({ error: 'invalid action' })
+
+  mqttClient.publish(`andon/station/${inc.station_id}/state`,
+    JSON.stringify({ color }))
+  res.json(inc)
+})
+
 /* ---------- REST endpoints clasicos ---------- */
 app.get('/stations', async (_req, res) => {
   const { rows } = await pool.query('SELECT * FROM station')
