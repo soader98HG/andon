@@ -67,12 +67,13 @@ npm run dev      # modo desarrollo
 # o
 npm run build    # genera `dist/` para producción
 ```
-Por defecto, el dashboard se comunica con la API en `http://localhost:3000`
-y con el WebSocket en `ws://localhost:8080`. Puedes ajustar estas URL
-creando un archivo `.env` en `andon-client/andon-dashboard` con:
+Por defecto, el dashboard contacta la API y el WebSocket en la misma
+dirección donde se sirve la página (puertos `3000` y `8080`). Si tu
+backend está en otra IP o puerto, crea un archivo `.env` en
+`andon-client/andon-dashboard` con por ejemplo:
 ```
-VITE_API_URL=http://localhost:3000
-VITE_WS_URL=ws://localhost:8080
+VITE_API_URL=http://mi-servidor:3000
+VITE_WS_URL=ws://mi-servidor:8080
 ```
 Sirve el directorio `dist/` con cualquier servidor estático (por ejemplo
 `npx serve dist`).
