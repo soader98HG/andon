@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from '../../api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useStation } from '../../contexts/StationContext';
 import { DEFECT_CODES } from '../../data/defects';
 
 export default function IncidentForm() {
-  const { station, setStation } = useStation();
+  const { station } = useStation();
   const { data: stations } = useQuery({
     queryKey: ['stations'],
     queryFn: () => axios.get('/stations').then(r => r.data)
@@ -22,6 +22,11 @@ export default function IncidentForm() {
 
   const handle = (e: any) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  // keep form station_id in sync with currently seleccionada station
+  useEffect(() => {
+    setForm(f => ({ ...f, station_id: station }));
+  }, [station]);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,24 +46,6 @@ export default function IncidentForm() {
 
   return (
     <form onSubmit={submit} className="space-y-2 border p-4 rounded mt-4">
-      <select
-        value={station}
-        onChange={e => {
-          const val = e.target.value;
-          setStation(val);
-          // default incident station to the current one
-          setForm(f => ({ ...f, station_id: val }));
-        }}
-        className="border p-1 w-full"
-        required
-      >
-        <option value="">ESTACION ACTUAL</option>
-        {stations?.map((s: any) => (
-          <option key={s.id} value={s.id}>
-            {s.name}
-          </option>
-        ))}
-      </select>
 
       <select
         required
