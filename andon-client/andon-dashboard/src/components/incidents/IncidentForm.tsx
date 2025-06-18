@@ -36,8 +36,10 @@ export default function IncidentForm() {
       <select
         value={station}
         onChange={e => {
-          setStation(e.target.value);
-          setForm(f => ({ ...f, station_id: '' }));
+          const val = e.target.value;
+          setStation(val);
+          // default incident station to the current one
+          setForm(f => ({ ...f, station_id: val }));
         }}
         className="border p-1 w-full"
         required
@@ -59,13 +61,11 @@ export default function IncidentForm() {
         disabled={!station}
       >
         <option value="">ESTACION A REPORTAR</option>
-        {stations
-          ?.filter((s: any) => String(s.id) !== station)
-          .map((s: any) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
+        {stations?.map((s: any) => (
+          <option key={s.id} value={s.id}>
+            {s.name}
+          </option>
+        ))}
       </select>
 
       <select
@@ -77,7 +77,10 @@ export default function IncidentForm() {
       >
         <option value="">Codigo defecto</option>
         {defects
-          ?.filter((d: any) => String(d.station_id) === form.station_id)
+          ?.filter((d: any) => {
+            const sid = form.station_id || station;
+            return sid !== '' && String(d.station_id) === sid;
+          })
           .map((d: any) => (
             <option key={d.code} value={d.code}>
               {d.code}-{d.description}
