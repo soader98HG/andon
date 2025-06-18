@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useStation } from '../../contexts/StationContext';
+import { DEFECT_CODES } from '../../data/defects';
 
 export default function IncidentForm() {
   const { station, setStation } = useStation();
@@ -10,10 +11,7 @@ export default function IncidentForm() {
     queryKey: ['stations'],
     queryFn: () => axios.get('/stations').then(r => r.data)
   });
-  const { data: defects } = useQuery({
-    queryKey: ['defects'],
-    queryFn: () => axios.get('/defects').then(r => r.data)
-  });
+  const defects = DEFECT_CODES;
 
   const [form, setForm] = useState({
     station_id: '',
@@ -76,16 +74,11 @@ export default function IncidentForm() {
         className="border p-1 w-full"
       >
         <option value="">Codigo defecto</option>
-        {defects
-          ?.filter((d: any) => {
-            const sid = form.station_id || station;
-            return sid !== '' && String(d.station_id) === sid;
-          })
-          .map((d: any) => (
-            <option key={d.code} value={d.code}>
-              {d.code}-{d.description}
-            </option>
-          ))}
+        {defects.map(d => (
+          <option key={d.code} value={d.code}>
+            {d.code}-{d.description}
+          </option>
+        ))}
       </select>
 
       <input
