@@ -25,8 +25,18 @@ export default function IncidentForm() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    await axios.post('/incidents', form);
-    setForm({ station_id: '', defect_code: '', vehicle_id: '', problem: '' });
+    try {
+      await axios.post('/incidents', form);
+      setForm({
+        station_id: '',
+        defect_code: '',
+        vehicle_id: '',
+        problem: ''
+      });
+    } catch (err) {
+      alert('Error al reportar incidencia');
+      console.error(err);
+    }
   };
 
   return (
