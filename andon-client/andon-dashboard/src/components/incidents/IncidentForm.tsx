@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import axios from '../../api';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useStation } from '../../contexts/StationContext';

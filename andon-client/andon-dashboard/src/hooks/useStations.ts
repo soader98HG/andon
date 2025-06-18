@@ -1,7 +1,7 @@
 // useStations.ts
 // obtiene estaciones via REST
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import axios from '../api';
 
 export const useStations = () =>
   useQuery({
