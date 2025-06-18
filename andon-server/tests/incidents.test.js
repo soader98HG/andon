@@ -31,7 +31,9 @@ describe('/incidents endpoints', () => {
       status: 'open',
       received_at: 'now'
     };
-    mPool.query.mockResolvedValueOnce({ rows: [newInc] });
+    mPool.query
+      .mockResolvedValueOnce({ rowCount: 1 }) // defect_code exists
+      .mockResolvedValueOnce({ rows: [newInc] });
     const res = await request(app).post('/incidents').send({
       station_id: 1,
       defect_code: 'A',
@@ -40,6 +42,14 @@ describe('/incidents endpoints', () => {
     });
     expect(res.statusCode).toBe(201);
     expect(res.body).toEqual(newInc);
+  });
+
+  test('POST /incidents with invalid defect returns 400', async () => {
+    mPool.query.mockResolvedValueOnce({ rowCount: 0 });
+    const res = await request(app)
+      .post('/incidents')
+      .send({ station_id: 1, defect_code: 'BAD', vehicle_id: 'V1' });
+    expect(res.statusCode).toBe(400);
   });
 
   test('PATCH /incidents/:id/close closes an incident', async () => {
