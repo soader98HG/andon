@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS incident (
   station_id  INTEGER REFERENCES station(id),
   defect_code TEXT REFERENCES defect_code(code),
   vehicle_id  TEXT,
+  problem     TEXT,
   status      TEXT DEFAULT 'open',
   opened_at   TIMESTAMP DEFAULT NOW(),
   received_at TIMESTAMP,
