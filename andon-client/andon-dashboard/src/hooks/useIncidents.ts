@@ -1,6 +1,6 @@
 // useIncidents.ts
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import axios from '../api';
 
 export const useIncidents = (status: string = 'open', station?: string) =>
   useQuery({

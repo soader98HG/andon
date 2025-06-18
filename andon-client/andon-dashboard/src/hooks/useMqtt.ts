@@ -19,7 +19,9 @@ export const useMqtt = (
   cb: (msg: { topic: string; payload: any }) => void
 ) => {
   useEffect(() => {
-    const ws = new WebSocket('ws://' + location.hostname + ':8080');
+    const url =
+      import.meta.env.VITE_WS_URL || `ws://${location.hostname}:8080`;
+    const ws = new WebSocket(url);
     ws.onmessage = ev => {
       try {
         const msg = JSON.parse(ev.data);
