@@ -11,7 +11,7 @@ export default function StationSelector() {
       onChange={e => setStation(e.target.value)}
       className="border px-2 py-1 rounded"
     >
-      <option value="">Estaci\u00f3n</option>
+      <option value="">ESTACION</option>
       {stations.map((s: any) => (
         <option key={s.id} value={s.id}>
           {s.name}

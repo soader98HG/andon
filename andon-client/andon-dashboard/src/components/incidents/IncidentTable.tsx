@@ -12,7 +12,7 @@ export default function IncidentTable({ status }: { status: string }) {
     <table className="w-full border mt-2">
       <thead>
         <tr>
-          <th>ID</th><th>Estacion</th><th>Defecto</th>
+          <th>ID</th><th>ESTACION</th><th>Defecto</th>
           <th>Vehiculo</th><th>Abierto</th><th>Accion</th>
         </tr>
       </thead>
@@ -37,7 +37,6 @@ export default function IncidentTable({ status }: { status: string }) {
                   <option value="">Accion</option>
                   <option value="finalizado">finalizado</option>
                   <option value="reproceso">reproceso</option>
-                  <option value="recibido">recibido</option>
                 </select>
               )}
             </td>
