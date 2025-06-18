@@ -1,4 +1,5 @@
 import { useStations } from '../hooks/useStations';
+import { useIncidents } from '../hooks/useIncidents';
 import { useMqtt } from '../hooks/useMqtt';
 import { useEffect, useState } from 'react';
 
@@ -6,13 +7,18 @@ type Station = { id: string; name: string; color: string };
 
 export default function Dashboard() {
   const { data: stations } = useStations();
+  const { data: incidents } = useIncidents('open');
   const [view, setView] = useState<Station[]>([]);
 
   useEffect(() => {
-    if (stations) {
-      setView(stations.map((s: any) => ({ ...s, color: 'verde' })));
-    }
-  }, [stations]);
+    if (!stations) return;
+    const mapped = stations.map((s: any) => {
+      const inc = incidents?.find((i: any) => String(i.station_id) === String(s.id));
+      const color = inc ? (inc.reprocess_at ? 'amarillo' : 'rojo') : 'verde';
+      return { ...s, color };
+    });
+    setView(mapped);
+  }, [stations, incidents]);
 
   useMqtt('andon/station/+/state', ({ topic, payload }) => {
     const station = topic.split('/')[2];
