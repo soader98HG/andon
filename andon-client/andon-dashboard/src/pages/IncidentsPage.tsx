@@ -13,7 +13,7 @@ export default function IncidentsPage() {
     <div className="p-4">
       <h1 className="text-xl font-bold mb-2">Incidencias</h1>
       {station === '' && (
-        <p className="text-red-600">Selecciona una estaci\u00f3n para operar.</p>
+        <p className="text-red-600">Selecciona una ESTACION para operar.</p>
       )}
 
       <IncidentForm />

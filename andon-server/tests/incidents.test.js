@@ -22,7 +22,14 @@ describe('/incidents endpoints', () => {
   });
 
   test('POST /incidents creates an incident', async () => {
-    const newInc = { id: 2, station_id: 1, defect_code: 'A', vehicle_id: 'V2', status: 'open' };
+    const newInc = {
+      id: 2,
+      station_id: 1,
+      defect_code: 'A',
+      vehicle_id: 'V2',
+      status: 'open',
+      received_at: 'now'
+    };
     mPool.query.mockResolvedValueOnce({ rows: [newInc] });
     const res = await request(app).post('/incidents').send({
       station_id: 1,

@@ -70,6 +70,13 @@ app.patch('/incidents/:id/action', async (req, res) => {
     return res.json(upd)
   }
 
+  if(action === 'reproceso')
+    await pool.query(
+      'UPDATE incident SET reprocess_at=NOW() WHERE id=$1', [id])
+  else if(action === 'recibido')
+    await pool.query(
+      'UPDATE incident SET received_at=NOW() WHERE id=$1', [id])
+
   const color = action === 'reproceso'
     ? 'amarillo'
     : action === 'recibido'
@@ -97,8 +104,9 @@ app.get('/defects', async (_req, res) => {
 app.post('/incidents', async (req, res) => {
   const { station_id, defect_code, vehicle_id } = req.body
   const { rows } = await pool.query(
-    `INSERT INTO incident (station_id, defect_code, vehicle_id)
-     VALUES ($1,$2,$3) RETURNING *`,
+    `INSERT INTO incident (
+       station_id, defect_code, vehicle_id, received_at
+     ) VALUES ($1,$2,$3,NOW()) RETURNING *`,
     [station_id, defect_code, vehicle_id]
   )
   const inc = rows[0]
