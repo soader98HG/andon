@@ -18,19 +18,19 @@ export default function IncidentsPage() {
         <div className="flex gap-2">
           <button
             onClick={() => setTab('open')}
-            className={`px-4 py-1 ${tab === 'open' ? 'bg-blue-500 text-white' : ''}`}
+            className={`px-4 py-1 border ${tab === 'open' ? 'bg-blue-500 text-white' : 'bg-white'}`}
           >
             Incidencias Activas
           </button>
           <button
             onClick={() => setTab('closed')}
-            className={`px-4 py-1 ${tab === 'closed' ? 'bg-blue-500 text-white' : ''}`}
+            className={`px-4 py-1 border ${tab === 'closed' ? 'bg-blue-500 text-white' : 'bg-white'}`}
           >
             Historial
           </button>
           <button
             onClick={() => setTab('charts')}
-            className={`px-4 py-1 ${tab === 'charts' ? 'bg-blue-500 text-white' : ''}`}
+            className={`px-4 py-1 border ${tab === 'charts' ? 'bg-blue-500 text-white' : 'bg-white'}`}
           >
             Gráficas
           </button>
@@ -40,7 +40,7 @@ export default function IncidentsPage() {
         <p className="text-red-600">Selecciona una ESTACION para operar.</p>
       )}
 
-      <IncidentForm />
+      {tab === 'open' && <IncidentForm />}
 
       {tab === 'charts' ? (
         <ChartsPage />

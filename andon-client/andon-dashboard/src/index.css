@@ -84,6 +84,7 @@ button:focus-visible {
 .bg-yellow-200 { background-color: #f0e68c; }
 .bg-green-200 { background-color: #c6e6c6; }
 .bg-blue-500 { background-color: #4d90fe; }
+.bg-white { background-color: #fff; }
 .w-full { width: 100%; }
 .space-y-2 > * + * { margin-top: 0.5rem; }
 
