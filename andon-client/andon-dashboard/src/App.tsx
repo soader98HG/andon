@@ -1,17 +1,13 @@
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import IncidentsPage from './pages/IncidentsPage';
 import ChartsPage from './pages/ChartsPage';
-import StationSelector from './components/StationSelector';
 
 function Nav() {
-  const loc = useLocation();
   return (
-    <nav className="bg-slate-800 text-white p-2 flex gap-4 items-center">
-      {loc.pathname !== '/' && <StationSelector />}
-      <Link to="/" className="px-2">Dash</Link>
+    <nav className="bg-slate-800 text-white p-2 flex gap-4">
+      <Link to="/" className="px-2">Inicio</Link>
       <Link to="/incidents" className="px-2">Incidencias</Link>
-      <Link to="/charts" className="px-2">GRAFICAS</Link>
     </nav>
   );
 }
@@ -19,6 +15,7 @@ function Nav() {
 export default function App() {
   return (
     <BrowserRouter>
+      <h1 className="text-center text-xl font-bold my-2">Dashboard de Incidencias Andon</h1>
       <Nav />
       <Routes>
         <Route path="/" element={<Dashboard />} />

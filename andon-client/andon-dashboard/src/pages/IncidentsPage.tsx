@@ -4,6 +4,7 @@ import ChartsPage from './ChartsPage';
 import { useState } from 'react';
 import { useStation } from '../contexts/StationContext';
 import { useIncidentSync } from '../hooks/useIncidentSync';
+import StationSelector from '../components/StationSelector';
 
 export default function IncidentsPage() {
   const [tab, setTab] = useState<'open' | 'closed' | 'charts'>('open');
@@ -12,33 +13,34 @@ export default function IncidentsPage() {
 
   return (
     <div className="p-4">
-      <h1 className="text-xl font-bold mb-2">Incidencias</h1>
+      <div className="flex items-center gap-4 mb-2">
+        <StationSelector />
+        <div className="flex gap-2">
+          <button
+            onClick={() => setTab('open')}
+            className={`px-4 py-1 ${tab === 'open' ? 'bg-blue-500 text-white' : ''}`}
+          >
+            Incidencias Activas
+          </button>
+          <button
+            onClick={() => setTab('closed')}
+            className={`px-4 py-1 ${tab === 'closed' ? 'bg-blue-500 text-white' : ''}`}
+          >
+            Historial
+          </button>
+          <button
+            onClick={() => setTab('charts')}
+            className={`px-4 py-1 ${tab === 'charts' ? 'bg-blue-500 text-white' : ''}`}
+          >
+            Gráficas
+          </button>
+        </div>
+      </div>
       {station === '' && (
         <p className="text-red-600">Selecciona una ESTACION para operar.</p>
       )}
 
       <IncidentForm />
-
-      <div className="mt-4">
-        <button
-          onClick={() => setTab('open')}
-          className={`px-4 py-1 ${tab === 'open' ? 'bg-gray-300' : ''}`}
-        >
-          Activas
-        </button>
-        <button
-          onClick={() => setTab('closed')}
-          className={`px-4 py-1 ${tab === 'closed' ? 'bg-gray-300' : ''}`}
-        >
-          Histórico
-        </button>
-        <button
-          onClick={() => setTab('charts')}
-          className={`px-4 py-1 ${tab === 'charts' ? 'bg-gray-300' : ''}`}
-        >
-          Gráficas
-        </button>
-      </div>
 
       {tab === 'charts' ? (
         <ChartsPage />
