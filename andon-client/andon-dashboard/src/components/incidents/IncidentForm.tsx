@@ -45,58 +45,64 @@ export default function IncidentForm() {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-2 border p-4 rounded mt-4">
+    <form onSubmit={submit} className="border p-4 rounded mt-4">
+      <div className="flex gap-2 mb-2">
+        <select
+          required
+          name="defect_code"
+          value={form.defect_code}
+          onChange={handle}
+          className="border p-1"
+          style={{ width: '33%' }}
+        >
+          <option value="">Codigo defecto</option>
+          {defects.map(d => (
+            <option key={d.code} value={d.code}>
+              {d.code}-{d.description}
+            </option>
+          ))}
+        </select>
 
-      <select
-        required
-        name="station_id"
-        value={form.station_id}
-        onChange={handle}
-        className="border p-1 w-full"
-        disabled={!station}
-      >
-        <option value="">ESTACION A REPORTAR</option>
-        {stations?.map((s: any) => (
-          <option key={s.id} value={s.id}>
-            {s.name}
-          </option>
-        ))}
-      </select>
+        <select
+          required
+          name="station_id"
+          value={form.station_id}
+          onChange={handle}
+          className="border p-1"
+          style={{ flex: 1 }}
+          disabled={!station}
+        >
+          <option value="">Estaci\u00f3n de Notificaci\u00f3n</option>
+          {stations?.map((s: any) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
 
-      <select
-        required
-        name="defect_code"
-        value={form.defect_code}
-        onChange={handle}
-        className="border p-1 w-full"
-      >
-        <option value="">Codigo defecto</option>
-        {defects.map(d => (
-          <option key={d.code} value={d.code}>
-            {d.code}-{d.description}
-          </option>
-        ))}
-      </select>
-
-      <input
-        name="vehicle_id"
-        placeholder="Vehiculo ID"
-        value={form.vehicle_id}
-        onChange={handle}
-        className="border p-1 w-full"
-      />
+        <input
+          name="vehicle_id"
+          placeholder="ID Veh\u00edculo"
+          value={form.vehicle_id}
+          onChange={handle}
+          className="border p-1"
+          style={{ flex: 1 }}
+        />
+      </div>
 
       <textarea
         name="problem"
         placeholder="Detalle del problema"
         value={form.problem}
         onChange={handle}
-        className="border p-1 w-full"
+        className="border p-1 w-full mb-2"
       />
 
-      <button className="bg-blue-500 text-white px-4 py-1 rounded">
-        Reportar
-      </button>
+      <div className="flex" style={{ justifyContent: 'flex-end' }}>
+        <button className="bg-blue-500 text-white px-4 py-1 rounded">
+          Reportar
+        </button>
+      </div>
     </form>
   );
 }
