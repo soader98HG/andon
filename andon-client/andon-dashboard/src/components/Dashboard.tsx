@@ -1,5 +1,7 @@
 import { useStations } from '../hooks/useStations';
 import { useIncidents } from '../hooks/useIncidents';
+import { useStation } from '../contexts/StationContext';
+import { useNavigate } from 'react-router-dom';
 import { useMqtt } from '../hooks/useMqtt';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +10,8 @@ type Station = { id: string; name: string; color: string };
 export default function Dashboard() {
   const { data: stations } = useStations();
   const { data: incidents } = useIncidents('open');
+  const { setStation } = useStation();
+  const navigate = useNavigate();
   const [view, setView] = useState<Station[]>([]);
 
   useEffect(() => {
@@ -32,15 +36,16 @@ export default function Dashboard() {
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
       {view.map(st => (
-        <div
+        <button
           key={st.id}
-          className={`border p-4 rounded
+          onClick={() => { setStation(String(st.id)); navigate('/incidents'); }}
+          className={`border p-4 rounded text-left w-full
             ${st.color === 'rojo' ? 'bg-red-300' :
               st.color === 'amarillo' ? 'bg-yellow-200' : 'bg-green-200'}`}
         >
           <h2 className="font-bold text-lg">{st.name}</h2>
           <p>{st.color}</p>
-        </div>
+        </button>
       ))}
     </div>
   );

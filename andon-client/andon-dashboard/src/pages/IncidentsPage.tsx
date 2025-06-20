@@ -1,11 +1,12 @@
 import IncidentForm from '../components/incidents/IncidentForm';
 import IncidentTable from '../components/incidents/IncidentTable';
+import ChartsPage from './ChartsPage';
 import { useState } from 'react';
 import { useStation } from '../contexts/StationContext';
 import { useIncidentSync } from '../hooks/useIncidentSync';
 
 export default function IncidentsPage() {
-  const [tab, setTab] = useState<'open' | 'closed'>('open');
+  const [tab, setTab] = useState<'open' | 'closed' | 'charts'>('open');
   const { station } = useStation();
   useIncidentSync();
 
@@ -31,9 +32,19 @@ export default function IncidentsPage() {
         >
           Histórico
         </button>
+        <button
+          onClick={() => setTab('charts')}
+          className={`px-4 py-1 ${tab === 'charts' ? 'bg-gray-300' : ''}`}
+        >
+          Gráficas
+        </button>
       </div>
 
-      <IncidentTable status={tab === 'open' ? 'open' : 'all'} />
+      {tab === 'charts' ? (
+        <ChartsPage />
+      ) : (
+        <IncidentTable status={tab === 'open' ? 'open' : 'all'} />
+      )}
     </div>
   );
 }
