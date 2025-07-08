@@ -150,12 +150,35 @@ app.post('/incidents', async (req, res) => {
 const wss = new WebSocketServer({ port: 8080 })
 
 // forward MQTT messages to all connected websocket clients
-mqttClient.on('message', (topic, msg) => {
+mqttClient.on('message', async (topic, msg) => {
   const text = msg.toString();
   console.log(`MQTT message on topic ${topic}: ${text}`);
   let payload;
   try { payload = JSON.parse(text); } catch { payload = text; }
   const packet = JSON.stringify({ topic, payload });
+
+  // Handle state request from ESP32
+  if (topic.startsWith('andon/station/') && topic.endsWith('/request_state')) {
+    const station_id = topic.split('/')[2];
+    console.log(`Received state request for station: ${station_id}`);
+    const { rows } = await pool.query(
+      `SELECT * FROM incident WHERE station_id = $1 AND status = 'open' ORDER BY opened_at DESC LIMIT 1`,
+      [station_id]
+    );
+    let color = 'verde'; // Default to green
+    if (rows.length > 0) {
+      const incident = rows[0];
+      if (incident.reprocess_at) {
+        color = 'amarillo';
+      } else {
+        color = 'rojo';
+      }
+    }
+    console.log(`Publishing initial state for station ${station_id}: ${color}`);
+    mqttClient.publish(`andon/station/${station_id}/state`, JSON.stringify({ color }));
+    return; // Do not forward this request message to WebSockets
+  }
+
   console.log(`Broadcasting to ${wss.clients.size} WebSocket clients`);
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
