@@ -3,6 +3,7 @@ import { useIncidents } from '../hooks/useIncidents';
 import { useStation } from '../contexts/StationContext';
 import { useNavigate } from 'react-router-dom';
 import { useMqtt } from '../hooks/useMqtt';
+import { useIncidentSync } from '../hooks/useIncidentSync';
 import { useEffect, useState } from 'react';
 
 type Station = { id: string; name: string; color: string };
@@ -13,6 +14,8 @@ export default function Dashboard() {
   const { setStation } = useStation();
   const navigate = useNavigate();
   const [view, setView] = useState<Station[]>([]);
+
+  useIncidentSync();
 
   useEffect(() => {
     if (!stations) return;
@@ -44,7 +47,11 @@ export default function Dashboard() {
               st.color === 'amarillo' ? 'bg-yellow-200' : 'bg-green-200'}`}
         >
           <h2 className="font-bold text-lg">{st.name}</h2>
-          <p>{st.color}</p>
+          <p>
+            {st.color === 'rojo' && 'Problema detectado'}
+            {st.color === 'amarillo' && 'En reproceso'}
+            {st.color === 'verde' && 'Sin problemas'}
+          </p>
         </button>
       ))}
     </div>

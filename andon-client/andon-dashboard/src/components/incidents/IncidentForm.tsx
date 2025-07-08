@@ -72,8 +72,8 @@ export default function IncidentForm() {
           style={{ flex: 1 }}
           disabled={!station}
         >
-          <option value="">Estaci\u00f3n de Notificaci\u00f3n</option>
-          {stations?.map((s: any) => (
+          <option value="">Estación de Notificación</option>
+          {stations?.filter((s: any) => String(s.id) !== station).map((s: any) => (
             <option key={s.id} value={s.id}>
               {s.name}
             </option>
@@ -82,7 +82,7 @@ export default function IncidentForm() {
 
         <input
           name="vehicle_id"
-          placeholder="ID Veh\u00edculo"
+          placeholder="ID Vehículo"
           value={form.vehicle_id}
           onChange={handle}
           className="border p-1"

@@ -27,10 +27,10 @@ export default function IncidentTable({ status }: { status: string }) {
       <table className="w-full border">
       <thead>
         <tr>
-          <th>Estaci\u00f3n</th>
-          <th>C\u00f3digo</th>
-          <th>Descripci\u00f3n</th>
-          <th>ID Veh\u00edculo</th>
+          <th>Estación</th>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>ID Vehículo</th>
           <th>Reporte</th>
           <th>Recibido</th>
           <th>Reproceso</th>
@@ -59,7 +59,7 @@ export default function IncidentTable({ status }: { status: string }) {
                   }}
                   className="border p-1"
                 >
-                  <option value="">Acci\u00f3n</option>
+                  <option value="">Acción</option>
                   <option value="recibido">Recibido</option>
                   <option value="reproceso">Reproceso</option>
                   <option value="finalizado">Finalizado</option>

@@ -15,7 +15,23 @@ app.use(express.json())  // parseo json
 
 /* --- conexiones a BD y MQTT --- */
 const pool       = new Pool({ connectionString: process.env.PG_URL })
-const mqttClient = mqtt.connect(process.env.MQTT_URL)
+const mqttClient = mqtt.connect(process.env.MQTT_URL, {
+  username: process.env.MQTT_USER,
+  password: process.env.MQTT_PASS,
+});
+
+mqttClient.on('connect', () => {
+  console.log('Connected to MQTT broker');
+  mqttClient.subscribe('andon/#', (err) => {
+    if (!err) {
+      console.log('Subscribed to andon/#');
+    }
+  });
+});
+
+mqttClient.on('error', (error) => {
+  console.error('MQTT Client Error:', error);
+});
 
 /* ---------- endpoints extra antes de los clasicos ---------- */
 
@@ -70,9 +86,12 @@ app.patch('/incidents/:id/action', async (req, res) => {
     return res.json(upd)
   }
 
-  if(action === 'reproceso')
-    await pool.query(
-      'UPDATE incident SET reprocess_at=NOW() WHERE id=$1', [id])
+  if(action === 'reproceso') {
+    const { rows: up } = await pool.query(
+      'UPDATE incident SET reprocess_at=NOW() WHERE id=$1 RETURNING * ', [id])
+    const upd = up[0]
+    mqttClient.publish('andon/incidents/update', JSON.stringify(upd))
+  }
   else if(action === 'recibido')
     await pool.query(
       'UPDATE incident SET received_at=NOW() WHERE id=$1', [id])
@@ -132,16 +151,19 @@ const wss = new WebSocketServer({ port: 8080 })
 
 // forward MQTT messages to all connected websocket clients
 mqttClient.on('message', (topic, msg) => {
-  const text = msg.toString()
-  let payload
-  try { payload = JSON.parse(text) } catch { payload = text }
-  const packet = JSON.stringify({ topic, payload })
+  const text = msg.toString();
+  console.log(`MQTT message on topic ${topic}: ${text}`);
+  let payload;
+  try { payload = JSON.parse(text); } catch { payload = text; }
+  const packet = JSON.stringify({ topic, payload });
+  console.log(`Broadcasting to ${wss.clients.size} WebSocket clients`);
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(packet)
+      console.log('Sending packet to client');
+      client.send(packet);
     }
-  })
-})
+  });
+});
 mqttClient.subscribe('andon/#')
 
 wss.on('connection', () => {

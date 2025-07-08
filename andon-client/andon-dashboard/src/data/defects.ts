@@ -31,7 +31,7 @@ export const DEFECT_CODES: DefectCode[] = [
   { code: 'CHR', description: 'Chorreado' },
   { code: 'COP', description: 'Contaminación en la Pintura' },
   { code: 'CRA', description: 'Craqueado' },
-  { code: 'ENR', description: 'Enrrojado' },
+  { code: 'ENR', description: 'Enrojado' },
   { code: 'ESC', description: 'Escurrido' },
   { code: 'EST', description: 'Estampado Defectuoso' },
   { code: 'FBR', description: 'Falta Brillo' },
